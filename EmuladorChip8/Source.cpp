@@ -181,12 +181,12 @@ void chip8EMULATE(){
 						for (int i = 1; i <= 2048; i++){
 						screen[i] = 0;
 						}
-					//	cout << "GFX Clear!" << endl;
+						cout << "GFX Clear!" << endl;
 						progcount += 2;
 					break;
 			
 					case 0x00EE: 
-				//		cout << "Retornando para o endereco " <<dec<< (int)pilha[pilhapos - 1] << " na memoria." << endl;
+						cout << "Retornando para o endereco " <<dec<< (int)pilha[pilhapos - 1] << " na memoria." << endl;
 						--pilhapos;
 						progcount = pilha[pilhapos];
 						progcount += 2;
@@ -194,11 +194,11 @@ void chip8EMULATE(){
 				
 				}break;
 		case 0x1000: 
-			//cout << "Pulando para o endereco " <<dec<< (int)(opcode & 0x0FFF) << " na memoria." << endl;
+			cout << "Pulando para o endereco " <<dec<< (int)(opcode & 0x0FFF) << " na memoria." << endl;
 			progcount = (opcode & 0x0FFF);
 			break;
 		case 0x2000: 
-			//cout << "Chamando subrotina no endereco " <<dec << (int)(opcode & 0x0FFF) << " na memoria. Salvado PC na pilha." << endl;
+			cout << "Chamando subrotina no endereco " <<dec << (int)(opcode & 0x0FFF) << " na memoria. Salvado PC na pilha." << endl;
 			pilha[pilhapos] = progcount;
 			pilhapos++;
 			progcount = ((opcode & 0x0FFF));
@@ -207,41 +207,41 @@ void chip8EMULATE(){
 		case 0x3000: 
 			if (registroV[(opcode & 0x0f00) >> 8] == (opcode & 0x00ff)){
 				progcount += 4;
-				//cout << "Pulando próxima instrução." << endl;
+				cout << "Pulando próxima instrução." << endl;
 			}
 			else{
 				progcount += 2;
-				//cout << "Prosseguindo com instrução." << endl;
+				cout << "Prosseguindo com instrução." << endl;
 			}
 			break;
 		case 0x4000: 
-			if ((registroV[opcode & 0x0f00 >> 8]) != (opcode & 0x00ff)){
+			if ((registroV[(opcode & 0x0f00) >> 8]) != (opcode & 0x00ff)){
 				progcount += 4;
-				//cout << "Pulando próxima instrução." << endl;
+				cout << "Pulando próxima instrução." << endl;
 			}
 			else{
 				progcount += 2;
-				//cout << "Prosseguindo com instrução." << endl;
+				cout << "Prosseguindo com instrução." << endl;
 			}
 			break;
 		case 0x5000: 
 			if (registroV[(opcode & 0x0f00) >> 8] == registroV[(opcode & 0x00f0) >> 4]){
-				//cout << "Pulando próxima instrução." << endl;
+				cout << "Pulando próxima instrução." << endl;
 				progcount += 4;
 			}
 			else{
-				//cout << "Prosseguindo com instrucao." << endl;
+				cout << "Prosseguindo com instrucao." << endl;
 				progcount += 2;
 			}
 				break;
 		case 0x6000: 
 			registroV[(opcode & 0x0F00) >> 8] = opcode & 0x00FF;
-			//cout << "Setando registro[" <<dec<< (int)((opcode & 0x0F00) >> 8) << "] para " << (opcode & 0x00FF) << endl;
+			cout << "Setando registro[" <<dec<< (int)((opcode & 0x0F00) >> 8) << "] para " << (opcode & 0x00FF) << endl;
 			progcount += 2;
 			break;
 		case 0x7000: 
 			registroV[(opcode & 0x0f00) >> 8] += opcode & 0x00ff;
-			//cout << "Somando ao Registro [" << dec << (int)((opcode & 0x0F00) >> 8) << "] o valor " << (opcode & 0x00ff) << endl;
+			cout << "Somando ao Registro [" << dec << (int)((opcode & 0x0F00) >> 8) << "] o valor " << (opcode & 0x00ff) << endl;
 			progcount += 2;
 			break;
 		case (0x8000) :
@@ -306,38 +306,38 @@ void chip8EMULATE(){
 			break;
 		case 0xA000: 
 			ivar = opcode & 0x0fff;
-			//cout << "iVar recebendo valor " << dec << (int)(opcode & 0x0FFF) << endl;
+			cout << "iVar recebendo valor " << dec << (int)(opcode & 0x0FFF) << endl;
 			progcount += 2;
 			break;
 		case 0xB000:
 			progcount = (opcode & 0x0FFF) + registroV[0];
-			//cout << dec << (opcode & 0x0fff) << endl;
+			cout << dec << (opcode & 0x0fff) << endl;
 			break;
 		case 0xC000:
 			registroV[(opcode & 0x0F00) >> 8] = (rand() % 0xFF) & (opcode & 0x00FF);
-			//cout << "Setando valor aleatório em RegistroV[" <<dec<<(int) ((opcode & 0x0F00) >> 8) << "]" << endl;
+			cout << "Setando valor aleatório em RegistroV[" <<dec<<(int) ((opcode & 0x0F00) >> 8) << "]" << endl;
 			progcount += 2;
 			break;
 		case 0xD000:
-			//cout << "Desenhar Sprite na posição " << dec << (int)((opcode & 0x0F00) >> 8) << " x e posição " <<(int)((opcode & 0x00F0) >> 4) << " y." << endl;
-			//cout << "Altura do sprite: " << dec << (int)(opcode & 0x000F) << endl;
+			cout << "Desenhar Sprite na posição " << dec << (int)((opcode & 0x0F00) >> 8) << " x e posição " <<(int)((opcode & 0x00F0) >> 4) << " y." << endl;
+			cout << "Altura do sprite: " << dec << (int)(opcode & 0x000F) << endl;
 			//system("pause");
 			drawscreen();
 			progcount += 2;
-			//system("pause");
+			system("pause");
 			break;
 		case (0xe000) :
 			switch ((opcode & 0x00FF)){
 			case 0x009e:
-				//cout << "Nao programado! Opcode EX9E" << endl;
-				//cout << "KEY NOT PRESSED!" << endl;
+				cout << "Nao programado! Opcode EX9E" << endl;
+				cout << "KEY NOT PRESSED!" << endl;
 				progcount += 4;
 				//Sleep(600);
 				break;
 			case 0x00a1:
-				//cout << "KEY NOT PRESSED!" << endl;
+				cout << "KEY NOT PRESSED!" << endl;
 				progcount += 4;
-				//cout << "Nao programado! Opcode EXA1" << endl; 
+				cout << "Nao programado! Opcode EXA1" << endl; 
 				//Sleep(600);
 				break;
 		}break;
@@ -345,25 +345,26 @@ void chip8EMULATE(){
 			switch ((opcode & 0x00FF)){
 			case 0x0007:
 				registroV[(opcode & 0x0F00) >> 8] = delay_timer;
-				//cout << "Setando Registro [" << dec << (int)((opcode & 0x0F00) >> 8) << "] para o valor do Delay Timer." << endl;
-				//cout << "Delay timer vale " << (int)delay_timer << endl;
+				cout << "Setando Registro [" << dec << (int)((opcode & 0x0F00) >> 8) << "] para o valor do Delay Timer." << endl;
+				cout << "Delay timer vale " << (int)delay_timer << endl;
 				progcount += 2;
 				break;
 			case 0x000a:
-				//cout << "Nao programado! Opcode FX0A" << endl;
+				cout << "Nao programado! Opcode FX0A" << endl;
 				progcount += 0;
 				break;
 			case 0x0015:
 				delay_timer = registroV[(opcode & 0x0F00) >> 8];
-				//cout << "Delay timer setado para " << dec << (int)(registroV[(opcode & 0x0F00) >> 8]) << endl;
+				cout << "Delay timer setado para " << dec << (int)(registroV[(opcode & 0x0F00) >> 8]) << endl;
 				progcount += 2;
 				break;
 			case 0x0018:
 				beep_timer = registroV[(opcode & 0x0F00) >> 8];
 				progcount += 2;
+				cout<<"ICH MUSS BEEP"<<endl;
 				break;
 			case 0x001e: 
-				//cout << "Função satânica." << endl;
+				cout << "Função satânica." << endl;
 				if (ivar + registroV[(opcode & 0x0f00) >> 8] > 0xFFF)
 					registroV[0xF] = 1;
 				else
@@ -372,12 +373,12 @@ void chip8EMULATE(){
 				progcount += 2;
 				break;
 			case 0x0029: 
-				//cout << "Sprite operation" << endl;
+				cout << "Sprite operation" << endl;
 				ivar = registroV[(opcode & 0x0F00) >> 8] * 0x5;
 				progcount += 2;
 				break;
 			case 0x0033:
-				//cout << "Executando função satânica que soma os paranauê na memória." << endl;
+				cout << "Executando função satânica que soma os paranauê na memória." << endl;
 				memory[ivar] = registroV[(opcode & 0x0F00) >> 8] / 100;
 				memory[ivar + 1] = (registroV[(opcode & 0x0F00) >> 8] / 10) % 10;
 				memory[ivar + 2] = (registroV[(opcode & 0x0F00) >> 8] % 100) % 10;
@@ -392,8 +393,8 @@ void chip8EMULATE(){
 			case 0x0065: 
 				for (int i = 0; i <= ((opcode & 0x0F00) >> 8); i++){
 					registroV[i] = memory[i + ivar];
-					//cout << "Memory[" <<dec<<(int) (i + ivar) << "] = " <<dec << (int)memory[i + ivar]<<endl;
-					//cout << "registroV[" << i << "] set to " << (int)memory[i + ivar] << endl;
+					cout << "Memory[" <<dec<<(int) (i + ivar) << "] = " <<dec << (int)memory[i + ivar]<<endl;
+					cout << "registroV[" << i << "] set to " << (int)memory[i + ivar] << endl;
 				}
 				ivar += ((opcode & 0x0F00) >> 8) + 1;
 				progcount += 2;
@@ -405,7 +406,7 @@ void chip8EMULATE(){
 		if (delay_timer > 0)
 			--delay_timer;
 		
-		/*if (output = 1){
+		if (output = 1){
 			cout << "Opcode executed: " << hex << opcode << endl;
 			cout << "Prox opcode: " << hex << noshowbase << (int)memory[progcount] << (int)memory[progcount + 1] << endl;
 			cout << "Program Counter: " << dec << progcount << endl;
@@ -457,7 +458,8 @@ int main(int argc, char *argv[]){
 	chip8load(); //inicializa as variáveis restantes, escreve a base na memória, prepara para receber opcodes.
 	Sleep(800);
 	chip8EMULATE(); //emula o sistema.
-
+	// /\ shit happens here
+	// ||
 	system("pause");
 	return EXIT_SUCCESS;
 }
