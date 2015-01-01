@@ -20,6 +20,8 @@ unsigned short pilhapos;
 unsigned char delay_timer;
 unsigned char beep_timer;
 unsigned char screenprev[(64 * 32) + 1];
+int frameskip = 0;
+int setframeskip = 0;
 int output = 0;
 
 unsigned short x;
@@ -82,6 +84,15 @@ void initcoutengine(){
 	}
 	Sleep(30);
 	cout << "Recomendado reconfigurar altura da janela do console." << endl;
+frameskip:
+	cout << "Por favor, entre com um valor maior que dois para o frameskipper." << endl;
+	cin >> setframeskip;
+	if (setframeskip < 2){
+		cout << "Valor de frameskip invalido.";
+		Sleep(1000);
+		system("cls");
+		goto frameskip;
+	}
 	system("pause");
 }
 
@@ -140,6 +151,8 @@ void drawscreen(){
 	unsigned short pixel;
 	
 	
+	
+
 	registroV[0xF] = 0;
 	for (int yline = 0; yline < height; yline++)
 	{
@@ -157,23 +170,31 @@ void drawscreen(){
 		}
 	}
 
+	if (frameskip == setframeskip){
+		frameskip = 0;
+		goto exit;
+	}
 	gotoxy(0, 0);
 
 	for (int i = 1; i <=2048; i++)
 	{
 		if (screen[i] != screenprev[i])
-			cout << (char)219;
-		else if (screen[i] == 0)
+			//cout << (char)219; //block ascii
+			cout << (char)35; //hashtag
+		else
 			cout << " ";
-		else cout << (char)219;
+				//gotoxy((x + 1), y);
 
 		if (i % 64 == 0)
 			cout << endl;
 	}
-	Sleep(3);
+	//Sleep(3);
 	//system("pause");
 
 
+exit:;
+	//for (int i = 0; i < 2048; i++)
+		//screenprev[i] = screen[i];
 }
 
 void chip8EMULATE(){
@@ -183,7 +204,7 @@ void chip8EMULATE(){
 	do{
 		opcode = memory[progcount] << 8 | memory[progcount+1];
 	//	cout <<"Opcode fetched : "<< hex << setw(4) << opcode << endl;
-		Sleep(10);
+		//Sleep(10);
 		switch ((opcode & 0xF000)){
 		case 0x0000:
 				switch (opcode & 0x00FF){
@@ -332,6 +353,7 @@ void chip8EMULATE(){
 		//	cout << "Desenhar Sprite na posição " << dec << (int)((opcode & 0x0F00) >> 8) << " x e posição " <<(int)((opcode & 0x00F0) >> 4) << " y." << endl;
 		//	cout << "Altura do sprite: " << dec << (int)(opcode & 0x000F) << endl;
 			//system("pause");
+			frameskip++;
 			drawscreen();
 			progcount += 2;
 		//	system("pause");
